@@ -1,0 +1,9 @@
+report:
+  export:
+    junit:
+      enabled: false
+      folder: test-results
+mail:
+  smtp:
+    starttls:
+      enable: false
