@@ -1,0 +1,4 @@
+report:
+  export:
+    mail:
+      password: abcdefgh
