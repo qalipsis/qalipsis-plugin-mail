@@ -26,10 +26,10 @@ description = "QALIPSIS plugin for Mail"
 kotlin.sourceSets["test"].kotlin.srcDir("build/generated/source/kaptKotlin/catadioptre")
 kapt.useBuildCache = false
 
-val coreVersion: String by project
+val pluginPlatformVersion: String by project
 
 dependencies {
-    implementation(platform("io.qalipsis:plugin-platform:${coreVersion}"))
+    implementation(platform("io.qalipsis:plugin-platform:${pluginPlatformVersion}"))
     compileOnly("io.aeris-consulting:catadioptre-annotations")
     compileOnly("io.micronaut:micronaut-runtime")
 
@@ -38,7 +38,7 @@ dependencies {
 
     implementation("javax.mail:mail:1.4.7")
     implementation("io.micronaut:micronaut-http-client")
-    kapt(platform("io.qalipsis:plugin-platform:${coreVersion}"))
+    kapt(platform("io.qalipsis:plugin-platform:${pluginPlatformVersion}"))
     kapt("io.qalipsis:api-processors")
     kapt("io.qalipsis:api-dsl")
     kapt("io.qalipsis:api-common")
@@ -58,7 +58,7 @@ dependencies {
     testRuntimeOnly("io.qalipsis:head")
     testRuntimeOnly("io.qalipsis:factory")
 
-    kaptTest(platform("io.qalipsis:plugin-platform:${coreVersion}"))
+    kaptTest(platform("io.qalipsis:plugin-platform:${pluginPlatformVersion}"))
     kaptTest("io.micronaut:micronaut-inject-java")
     kaptTest("io.qalipsis:api-processors")
 }
