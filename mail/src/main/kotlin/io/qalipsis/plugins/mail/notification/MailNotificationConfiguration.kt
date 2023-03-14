@@ -61,7 +61,7 @@ interface MailNotificationConfiguration {
     @get:NotNull
     val authenticationMode: AuthenticationMode
 
-    @get:Bindable(defaultValue = "")
+    @get:Bindable(defaultValue = "no-reply@qalipsis.io")
     @get:NotBlank
     val from: String
 
