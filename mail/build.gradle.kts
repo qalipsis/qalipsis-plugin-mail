@@ -29,38 +29,38 @@ kapt.useBuildCache = false
 val pluginPlatformVersion: String by project
 
 dependencies {
-    implementation(platform("io.qalipsis:plugin-platform:${pluginPlatformVersion}"))
+    implementation(platform("io.qalipsis:qalipsis-plugin-platform:${pluginPlatformVersion}"))
     compileOnly("io.aeris-consulting:catadioptre-annotations")
     compileOnly("io.micronaut:micronaut-runtime")
 
-    api("io.qalipsis:api-common")
-    api("io.qalipsis:api-dsl")
+    api("io.qalipsis:qalipsis-api-common")
+    api("io.qalipsis:qalipsis-api-dsl")
 
     implementation("javax.mail:mail:1.4.7")
     implementation("io.micronaut:micronaut-http-client")
-    kapt(platform("io.qalipsis:plugin-platform:${pluginPlatformVersion}"))
-    kapt("io.qalipsis:api-processors")
-    kapt("io.qalipsis:api-dsl")
-    kapt("io.qalipsis:api-common")
+    kapt(platform("io.qalipsis:qalipsis-plugin-platform:${pluginPlatformVersion}"))
+    kapt("io.qalipsis:qalipsis-api-processors")
+    kapt("io.qalipsis:qalipsis-api-dsl")
+    kapt("io.qalipsis:qalipsis-api-common")
     kapt("io.aeris-consulting:catadioptre-annotations")
 
     testImplementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation ("org.testcontainers:testcontainers")
-    testImplementation("io.qalipsis:test")
+    testImplementation("io.qalipsis:qalipsis-test")
     testImplementation("io.micronaut.test:micronaut-test-junit5")
     testImplementation("javax.annotation:javax.annotation-api")
     testImplementation("io.micronaut:micronaut-runtime")
     testImplementation("io.aeris-consulting:catadioptre-kotlin")
-    testImplementation(testFixtures("io.qalipsis:api-dsl"))
-    testImplementation(testFixtures("io.qalipsis:api-common"))
-    testImplementation(testFixtures("io.qalipsis:runtime"))
-    testRuntimeOnly("io.qalipsis:runtime")
-    testRuntimeOnly("io.qalipsis:head")
-    testRuntimeOnly("io.qalipsis:factory")
+    testImplementation(testFixtures("io.qalipsis:qalipsis-api-dsl"))
+    testImplementation(testFixtures("io.qalipsis:qalipsis-api-common"))
+    testImplementation(testFixtures("io.qalipsis:qalipsis-runtime"))
+    testRuntimeOnly("io.qalipsis:qalipsis-runtime")
+    testRuntimeOnly("io.qalipsis:qalipsis-head")
+    testRuntimeOnly("io.qalipsis:qalipsis-factory")
 
-    kaptTest(platform("io.qalipsis:plugin-platform:${pluginPlatformVersion}"))
+    kaptTest(platform("io.qalipsis:qalipsis-plugin-platform:${pluginPlatformVersion}"))
     kaptTest("io.micronaut:micronaut-inject-java")
-    kaptTest("io.qalipsis:api-processors")
+    kaptTest("io.qalipsis:qalipsis-api-processors")
 }
 
 

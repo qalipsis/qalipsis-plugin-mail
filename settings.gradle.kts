@@ -14,9 +14,11 @@
  * permissions and limitations under the License.
  */
 
-rootProject.name = "qalipsis-plugin-mail"
+rootProject.name = "qalipsis-plugins-mail"
 
 include(
-    "mail"
+    "qalipsis-plugin-mail"
 )
+
+project(":qalipsis-plugin-mail").projectDir = File(rootDir, "mail")
 
