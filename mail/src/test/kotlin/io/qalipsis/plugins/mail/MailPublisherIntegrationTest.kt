@@ -279,7 +279,7 @@ internal class MailPublisherIntegrationTest : TestPropertyProvider {
 
             // then
             val response = retrieveBySubject("${campaignReport.campaignKey}+${campaignReport.status}")
-            assertThat { response.isNotEmpty() }
+            assertTrue { response.isNotEmpty() }
             assertThat(response[0]).all {
                 prop(MailResponse::subject).isEqualTo(subject)
                 prop(MailResponse::html).isEqualTo(htmlMessage)
@@ -288,7 +288,7 @@ internal class MailPublisherIntegrationTest : TestPropertyProvider {
             assertFalse { attachments.isNullOrEmpty() }
             val firstAttachment = attachments?.get(0) as MailAttachment
             assertThat(firstAttachment).all {
-                prop(MailAttachment::filename).contains(campaignReport.campaignKey)
+                prop(MailAttachment::fileName).contains(campaignReport.campaignKey)
                 prop(MailAttachment::generatedFileName).contains(campaignReport.campaignKey)
                 prop(MailAttachment::contentType).isEqualTo("application/zip")
                 prop(MailAttachment::contentDisposition).isEqualTo("attachment")
