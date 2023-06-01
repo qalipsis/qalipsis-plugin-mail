@@ -42,7 +42,7 @@ class MailResponse(
 class MailContact(val address: String, val name: String)
 
 /**
- * Response class to retrieve mail attchment values from api response.
+ * Response class to retrieve mail attachment values from api response.
  *
  * @author Francisca Eze
  */
@@ -50,6 +50,6 @@ class MailContact(val address: String, val name: String)
 class MailAttachment(
     val contentType: String,
     val contentDisposition: String,
-    val filename: String,
+    val fileName: String,
     val generatedFileName: String
 )
