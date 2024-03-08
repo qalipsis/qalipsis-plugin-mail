@@ -24,13 +24,13 @@ import io.micronaut.core.annotation.Introspected
  * @author Francisca Eze
  */
 @Introspected
-class MailResponse(
-    val from: Array<MailContact>,
-    val to: Array<MailContact>,
-    val cc: Array<MailContact>?,
+data class MailResponse(
+    val from: List<MailContact>,
+    val to: List<MailContact>,
+    val cc: List<MailContact>?,
     val subject: String,
     val html: String,
-    val attachments: Array<MailAttachment>?
+    val attachments: List<MailAttachment>?
 )
 
 /**
@@ -39,7 +39,7 @@ class MailResponse(
  * @author Francisca Eze
  */
 @Introspected
-class MailContact(val address: String, val name: String)
+class MailContact(val address: String, val name: String?)
 
 /**
  * Response class to retrieve mail attachment values from api response.
