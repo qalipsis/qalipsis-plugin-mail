@@ -20,6 +20,7 @@ import assertk.all
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.isEqualTo
+import assertk.assertions.isNull
 import assertk.assertions.prop
 import io.micronaut.context.annotation.Value
 import io.micronaut.core.type.Argument
@@ -143,11 +144,11 @@ internal class MailPublisherIntegrationTest : TestPropertyProvider {
             val to = response[0].to
             assertThat(from[0]).all {
                 prop(MailContact::address).isEqualTo(FROM)
-                prop(MailContact::name).isEqualTo("")
+                prop(MailContact::name).isNull()
             }
             assertThat(to[0]).all {
                 prop(MailContact::address).isEqualTo(TO)
-                prop(MailContact::name).isEqualTo("")
+                prop(MailContact::name).isNull()
             }
         }
 
@@ -175,17 +176,17 @@ internal class MailPublisherIntegrationTest : TestPropertyProvider {
             val cc = response[0].cc
             assertThat(from[0]).all {
                 prop(MailContact::address).isEqualTo(FROM)
-                prop(MailContact::name).isEqualTo("")
+                prop(MailContact::name).isNull()
             }
             assertThat(to[0]).all {
                 prop(MailContact::address).isEqualTo(TO)
-                prop(MailContact::name).isEqualTo("")
+                prop(MailContact::name).isNull()
             }
             assertFalse { cc.isNullOrEmpty() }
             val first = cc?.get(0) as MailContact
             assertThat(first).all {
                 prop(MailContact::address).isEqualTo(CC)
-                prop(MailContact::name).isEqualTo("")
+                prop(MailContact::name).isNull()
             }
 
 
@@ -254,11 +255,11 @@ internal class MailPublisherIntegrationTest : TestPropertyProvider {
             val to = response[0].to
             assertThat(from[0]).all {
                 prop(MailContact::address).isEqualTo(FROM)
-                prop(MailContact::name).isEqualTo("")
+                prop(MailContact::name).isNull()
             }
             assertThat(to[0]).all {
                 prop(MailContact::address).isEqualTo(TO)
-                prop(MailContact::name).isEqualTo("")
+                prop(MailContact::name).isNull()
             }
         }
 
@@ -360,11 +361,11 @@ internal class MailPublisherIntegrationTest : TestPropertyProvider {
             val to = response[0].to
             assertThat(from[0]).all {
                 prop(MailContact::address).isEqualTo(FROM)
-                prop(MailContact::name).isEqualTo("")
+                prop(MailContact::name).isNull()
             }
             assertThat(to[0]).all {
                 prop(MailContact::address).isEqualTo(TO)
-                prop(MailContact::name).isEqualTo("")
+                prop(MailContact::name).isNull()
             }
         }
 
@@ -449,7 +450,7 @@ internal class MailPublisherIntegrationTest : TestPropertyProvider {
         """.trimIndent()
     }
 
-    private fun retrieveBySubject(subject: String): MutableList<MailResponse> {
+    private fun retrieveBySubject(subject: String): List<MailResponse> {
         val getSubjectRequest: HttpRequest<*> = GET<Any>("/email/?subject=$subject")
         return httpClient.toBlocking().retrieve(getSubjectRequest, Argument.listOf(MailResponse::class.java))
     }
