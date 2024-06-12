@@ -17,6 +17,11 @@
 package io.qalipsis.plugins.mail.notification
 
 import io.qalipsis.api.report.ExecutionStatus
+import io.qalipsis.plugins.mail.notification.ReportExecutionStatus.ABORTED
+import io.qalipsis.plugins.mail.notification.ReportExecutionStatus.ALL
+import io.qalipsis.plugins.mail.notification.ReportExecutionStatus.FAILED
+import io.qalipsis.plugins.mail.notification.ReportExecutionStatus.SUCCESSFUL
+import io.qalipsis.plugins.mail.notification.ReportExecutionStatus.WARNING
 
 /**
  * Report Status for when to trigger notifications.

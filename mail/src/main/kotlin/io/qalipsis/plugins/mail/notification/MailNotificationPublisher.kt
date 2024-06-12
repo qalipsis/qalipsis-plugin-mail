@@ -29,7 +29,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.Duration
-import java.util.Properties
+import java.util.*
 import javax.activation.DataHandler
 import javax.activation.FileDataSource
 import javax.mail.Authenticator
