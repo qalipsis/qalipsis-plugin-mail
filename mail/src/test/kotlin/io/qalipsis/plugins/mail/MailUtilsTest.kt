@@ -1,80 +1,72 @@
 /*
- * Copyright 2022 AERIS IT Solutions GmbH
+ * QALIPSIS
+ * Copyright (C) 2025 AERIS IT Solutions GmbH
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing
- * permissions and limitations under the License.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 package io.qalipsis.plugins.mail
 
 import assertk.assertThat
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import assertk.assertions.isTrue
 import io.qalipsis.plugins.mail.notification.MailUtils
 import io.qalipsis.plugins.mail.utils.TestUtil
-import io.qalipsis.test.coroutines.TestDispatcherProvider
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.RegisterExtension
+import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 import java.util.stream.Collectors
 
-@MicronautTest(startApplication = false)
 internal class MailUtilsTest {
 
-    private lateinit var file: File
+    @TempDir
+    private lateinit var tempDir: File
 
-    @JvmField
-    @RegisterExtension
-    val testDispatcherProvider = TestDispatcherProvider()
+    @TempDir
+    private lateinit var unzipDirectory: File
+
+    private lateinit var zippedFile: File
 
     @BeforeEach
     fun setup() {
-        file = File.createTempFile(CAMPAIGN_KEY, ".zip")
-        file.mkdirs()
-    }
-
-    @AfterEach
-    fun cleanup() {
-        val unzippedDirectory = File(DESTINATION_DIRECTORY)
-        unzippedDirectory.deleteRecursively()
-        file.delete()
+        zippedFile = File.createTempFile(CAMPAIGN_KEY, ".zip", tempDir)
     }
 
     @Test
-    fun `should recursively compress a directory`() = testDispatcherProvider.run {
-        val reportDirectory = File("$REPORT_FOLDER/${CAMPAIGN_KEY}")
-        MailUtils.compressDirectory(reportDirectory, file)
-        val zippedFile = File("$reportDirectory.zip")
-        assertThat { zippedFile.exists() }
-        TestUtil.unzip(file, "$DESTINATION_DIRECTORY/$CAMPAIGN_KEY")
-        val filesAfterCompression =
-            withContext(Dispatchers.IO) {
-                Files.walk(Paths.get("$DESTINATION_DIRECTORY/$CAMPAIGN_KEY"))
-            }
-                .filter((Files::isRegularFile))
-                .collect(Collectors.toList())
+    fun `should recursively compress a directory`() {
+        // given
+        val reportDirectory = copyJunitReportsToTemp()
+
+        // when
+        MailUtils.compressDirectory(reportDirectory.toFile(), zippedFile)
+
+        // then
+        assertThat(zippedFile).transform("exists") { it.exists() }.isTrue()
+
+        TestUtil.unzip(zippedFile, unzipDirectory.absolutePath)
         val fileBeforeCompression =
-            withContext(Dispatchers.IO) {
-                Files.walk(Paths.get("$REPORT_FOLDER/$CAMPAIGN_KEY"))
-            }
+            Files.walk(reportDirectory)
                 .filter(Files::isRegularFile)
+                .collect(Collectors.toList())
+        val filesAfterCompression =
+                Files.walk(unzipDirectory.toPath())
+                .filter((Files::isRegularFile))
                 .collect(Collectors.toList())
         assertEquals(filesAfterCompression.size, fileBeforeCompression.size)
         assertTrue(isEqualContent(fileBeforeCompression, filesAfterCompression))
@@ -85,7 +77,7 @@ internal class MailUtilsTest {
         val k = filesAfterCompression.iterator()
         val t = fileBeforeCompression.iterator()
         while (k.hasNext() && t.hasNext()) {
-            if(!isEqual(k.next(), t.next())) {
+            if (!isEqual(k.next(), t.next())) {
                 isEqualContent = false
                 break
             }
@@ -99,12 +91,30 @@ internal class MailUtilsTest {
         }
         val first = Files.readString(firstFile)
         val second = Files.readString(secondFile)
-        return first!!.contentEquals(second)
+        return first.contentEquals(second)
+    }
+
+    private fun copyJunitReportsToTemp(): Path {
+        val reportDirectory = Files.createTempDirectory(REPORT_FOLDER)
+        val fileList = this.javaClass.getResourceAsStream("/$REPORT_FOLDER/index.txt")!!
+            .bufferedReader().readLines()
+        for (relativePath in fileList) {
+            val inputStream = this.javaClass.getResourceAsStream("/$REPORT_FOLDER/$relativePath")
+            val targetFile = File(reportDirectory.toFile(), relativePath)
+            targetFile.parentFile.mkdirs()
+
+            inputStream.use { input ->
+                targetFile.outputStream().use { output ->
+                    input!!.copyTo(output)
+                }
+            }
+        }
+
+        return reportDirectory
     }
 
     companion object {
-        const val REPORT_FOLDER = "src/test/resources/junit-reports"
+        const val REPORT_FOLDER = "junit-reports"
         const val CAMPAIGN_KEY = "campaign-8"
-        const val DESTINATION_DIRECTORY = "src/test/resources/junit-reports/unzip"
     }
 }
