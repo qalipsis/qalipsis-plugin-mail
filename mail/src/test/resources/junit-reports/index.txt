@@ -1,0 +1,10 @@
+campaign-8/integration/bar.xml
+campaign-8/integration/bar6.xml
+campaign-8/integration/services/bar.xml
+campaign-8/integration/services/foo2.xml
+campaign-8/integration/services/foo3.xml
+campaign-8/bar3.xml
+campaign-8/bar4.xml
+campaign-8/unit/foo1.xml
+campaign-8/unit/foo2.xml
+campaign-8/unit/foo3.xml
